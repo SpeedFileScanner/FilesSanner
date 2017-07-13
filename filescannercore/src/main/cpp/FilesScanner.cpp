@@ -23,7 +23,8 @@ jmethodID fileInfo_setLastModifyTime;//目录文件实体类的setPath方法
 jmethodID fileInfo_setFileSize;//目录文件实体类的setFileSize方法
 
 jclass file_scanner_jni_java_cls;
-jmethodID fileScanner_isFileSupport_method;
+jmethodID fileScanner_isFileSizeSupport_method;
+jmethodID fileScanner_isFileExtensionSupport_method;
 
 /**
  * 扫描文件夹
@@ -155,6 +156,18 @@ void doScannerFiles(JNIEnv *env, char *path, char *typeStr) {
 //        if (strcmp(typeStr, extension) != 0) {
 //            continue;
 //        }
+        jstring tmpExtension = env->NewStringUTF(extension);
+        if (tmpExtension == NULL) {
+            env->DeleteLocalRef(tmpExtension);
+            continue;
+        }
+        jboolean support = env->CallStaticBooleanMethod(file_scanner_jni_java_cls,
+                                                        fileScanner_isFileExtensionSupport_method,
+                                                        tmpExtension);
+        env->DeleteLocalRef(tmpExtension);
+        if (!support) {
+            continue;
+        }
 
         char dirPath[250];
         strcpy(dirPath, path);
@@ -174,7 +187,7 @@ void doScannerFiles(JNIEnv *env, char *path, char *typeStr) {
         jlong size = statBuffer.st_size;
 
         LOGE("doScannerFiles method  %s",
-             fileScanner_isFileSupport_method == NULL ? "false" : "true");
+             fileScanner_isFileSizeSupport_method == NULL ? "false" : "true");
 
         LOGE("doScannerFiles class  %s",
              file_scanner_jni_java_cls == NULL ? "false" : "true");
@@ -183,11 +196,11 @@ void doScannerFiles(JNIEnv *env, char *path, char *typeStr) {
 
         jstring tmpName = env->NewStringUTF(name);
         jlong tmpSize = size;
-        jboolean support = env->CallStaticBooleanMethod(file_scanner_jni_java_cls,
-                                                        fileScanner_isFileSupport_method,
-                                                        tmpName, tmpSize);
+        jboolean sizesupport = env->CallStaticBooleanMethod(file_scanner_jni_java_cls,
+                                                            fileScanner_isFileSizeSupport_method,
+                                                            tmpSize);
         env->DeleteLocalRef(tmpName);
-        if (!support) {
+        if (!sizesupport) {
             env->DeleteLocalRef(fileInfo_obj);  //释放fileinfo实体
             env->DeleteLocalRef(str);//释放字符串
             continue;
@@ -238,20 +251,27 @@ void initJavaCallback(JNIEnv *env, jobject thiz) {
     LOGE("initJavaCallback jobject= %s", typeid(thiz).name());
     if (file_scanner_jni_java_cls == NULL) {
         LOGE("initJavaCallback 11111111 %s", file_scanner_jni_java_cls == NULL ? "false" : "true");
-        jclass tmp= env->FindClass("io/haydar/filescanner/FileScannerJni");
+        jclass tmp = env->FindClass("io/haydar/filescanner/FileScannerJni");
         file_scanner_jni_java_cls = (jclass) env->NewGlobalRef(tmp);
     }
     LOGE("initJavaCallback 22222222");
     LOGE("initJavaCallback getclass %s\n", file_scanner_jni_java_cls == NULL ? "false" : "true");
 
-    LOGE("initJavaCallback method %s", fileScanner_isFileSupport_method == NULL ? "false" : "true");
-    if (fileScanner_isFileSupport_method == NULL) {
-        fileScanner_isFileSupport_method = env->GetStaticMethodID(file_scanner_jni_java_cls,
-                                                                  "isFileSupport",
-                                                                  "(Ljava/lang/String;J)Z");
+    LOGE("initJavaCallback method %s",
+         fileScanner_isFileSizeSupport_method == NULL ? "false" : "true");
+    if (fileScanner_isFileSizeSupport_method == NULL) {
+        fileScanner_isFileSizeSupport_method = env->GetStaticMethodID(file_scanner_jni_java_cls,
+                                                                      "isFileSizeSupport",
+                                                                      "(J)Z");
         LOGE("initJavaCallback 3333333333");
         LOGE("initJavaCallback method %s",
-             fileScanner_isFileSupport_method == NULL ? "false" : "true");
+             fileScanner_isFileSizeSupport_method == NULL ? "false" : "true");
+    }
+    if (fileScanner_isFileExtensionSupport_method == NULL) {
+        fileScanner_isFileExtensionSupport_method = env->GetStaticMethodID(
+                file_scanner_jni_java_cls,
+                "isFileExtensionSupport",
+                "(Ljava/lang/String;)Z");
     }
 }
 

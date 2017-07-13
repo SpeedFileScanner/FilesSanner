@@ -3,6 +3,8 @@ package io.haydar.filescanner;
 import java.util.ArrayList;
 import java.util.List;
 
+import io.haydar.filescanner.util.FilterUtil;
+
 /**
  * @author Haydar
  * @Package io.haydar.filescannercore
@@ -30,6 +32,9 @@ public class ScannerWrapper {
 
     public static List<FileInfo> scanFiles(String filePath, String type) {
         List<FileInfo> result = new ArrayList<>();
+        if (FilterUtil.isInBlackList(filePath)) {
+            return result;
+        }
         if (FileScannerJni.isLoadJNISuccess()) {
             result = FileScannerJni.scanFiles(filePath, type);
         } else {

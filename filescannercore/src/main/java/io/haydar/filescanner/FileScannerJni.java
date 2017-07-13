@@ -35,12 +35,14 @@ public class FileScannerJni {
         return mLoadSuccess;
     }
 
-    public static boolean isFileSupport(String filePath, long fileSize) {
-        Log.e("WW", "isFileSupport filePath:" + filePath + "; fileSize=" + fileSize);
-//        if (FilterUtil.isInBlackList(filePath)) {
-//            return false;
-//        }
-        return FilterUtil.isSupportType(filePath) && FilterUtil.isFileSizeSupport(fileSize);
+    public static boolean isFileSizeSupport(long fileSize) {
+        Log.e("WW", "isFileSizeSupport  fileSize=" + fileSize);
+        return FilterUtil.isFileSizeSupport(fileSize);
+    }
+
+    public static boolean isFileExtensionSupport(String extension) {
+        Log.e("WW", "isFileExtensionSupport  extension=" + extension);
+        return FilterUtil.isSupportType(extension);
     }
 
     public static native ArrayList<FileInfo> scanDirs(String paramString);
