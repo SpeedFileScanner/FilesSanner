@@ -44,7 +44,7 @@ void doScannerDirs(JNIEnv *env, char *path) {
     jstring str = env->NewStringUTF(path);
     env->CallVoidMethod(fileInfo_obj, fileInfo_setFilePath, str);   //set地址
     // LOGI("时间---%d",statBuffer.st_mtim);
-    jlong time = statBuffer.st_mtim.tv_sec;
+    jlong time = statBuffer.st_mtime;
     env->CallVoidMethod(fileInfo_obj, fileInfo_setLastModifyTime, time);//set最后一次修改的时间
     env->CallBooleanMethod(list_obj, list_add, fileInfo_obj);   //添加到目录list中
     env->DeleteLocalRef(fileInfo_obj);  //释放fileinfo实体
@@ -112,7 +112,7 @@ void doScannerUpdateDirs(JNIEnv *env, char *path) {
                                               fileInfo_constructor);  //new一个FileInfo实体类对象
         jstring str = env->NewStringUTF(path);
         env->CallVoidMethod(fileInfo_obj, fileInfo_setFilePath, str);   //set地址
-        jlong time = statBuffer.st_mtim.tv_sec;
+        jlong time = statBuffer.st_mtime;
         env->CallVoidMethod(fileInfo_obj, fileInfo_setLastModifyTime, time);//set最后一次修改的时间
         env->CallBooleanMethod(list_obj, list_add, fileInfo_obj);   //添加到目录list中
         env->DeleteLocalRef(fileInfo_obj);  //释放fileinfo实体
@@ -170,7 +170,7 @@ void doScannerFiles(JNIEnv *env, char *path, char *typeStr) {
         jobject fileInfo_obj = env->NewObject(fileInfo_cls,
                                               fileInfo_constructor);  //new一个FileInfo实体类对象
         jstring str = env->NewStringUTF(dirPath);
-        jlong time = statBuffer.st_mtim.tv_sec;
+        jlong time = statBuffer.st_mtime;
         jlong size = statBuffer.st_size;
 
         LOGE("doScannerFiles method  %s",
@@ -188,6 +188,8 @@ void doScannerFiles(JNIEnv *env, char *path, char *typeStr) {
                                                         tmpName, tmpSize);
         env->DeleteLocalRef(tmpName);
         if (!support) {
+            env->DeleteLocalRef(fileInfo_obj);  //释放fileinfo实体
+            env->DeleteLocalRef(str);//释放字符串
             continue;
         }
 
@@ -317,7 +319,7 @@ jlong JNICALL Java_io_haydar_filescanner_FileScannerJni_getFileLastModifiedTime
     if (stat(path, &statBuffer) != 0) { //读取stat信息
         return -1l;
     }
-    jlong time = statBuffer.st_mtim.tv_sec;
+    jlong time = statBuffer.st_mtime;
     env->ReleaseStringUTFChars(str, path);
     return time;
 }
