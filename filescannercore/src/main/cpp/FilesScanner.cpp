@@ -128,7 +128,7 @@ void doScannerUpdateDirs(JNIEnv *env, char *path) {
  * @param env
  * @param path
  */
-void doScannerFiles(JNIEnv *env, char *path, char *typeStr) {
+void doScannerFiles(JNIEnv *env, char *path) {
     struct dirent *entry;
     DIR *dir = opendir(path);
     if (!dir) {
@@ -283,15 +283,13 @@ void initJavaCallback(JNIEnv *env, jobject thiz) {
  * @return
  */
 jobject JNICALL Java_io_haydar_filescanner_FileScannerJni_scanFiles
-        (JNIEnv *env, jobject thiz, jstring str, jstring type) {
+        (JNIEnv *env, jobject thiz, jstring str) {
     char *path = (char *) env->GetStringUTFChars(str, NULL);
-    char *typeStr = (char *) env->GetStringUTFChars(type, NULL);
     init(env);
     initJavaCallback(env, thiz);
-    doScannerFiles(env, path, typeStr);
+    doScannerFiles(env, path);
     finish(env);
     env->ReleaseStringUTFChars(str, path);
-    env->ReleaseStringUTFChars(type, typeStr);
     return list_obj;
 }
 

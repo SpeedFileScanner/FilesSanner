@@ -35,11 +35,23 @@ public class FileScannerJni {
         return mLoadSuccess;
     }
 
+    /**
+     * call from jni
+     *
+     * @param fileSize
+     * @return
+     */
     public static boolean isFileSizeSupport(long fileSize) {
         Log.e("WW", "isFileSizeSupport  fileSize=" + fileSize);
         return FilterUtil.isFileSizeSupport(fileSize);
     }
 
+    /**
+     * call from jni
+     *
+     * @param extension
+     * @return
+     */
     public static boolean isFileExtensionSupport(String extension) {
         Log.e("WW", "isFileExtensionSupport  extension=" + extension);
         return FilterUtil.isSupportType(extension);
@@ -47,7 +59,7 @@ public class FileScannerJni {
 
     public static native ArrayList<FileInfo> scanDirs(String paramString);
 
-    public static native ArrayList<FileInfo> scanFiles(String filePath, String type);
+    public static native ArrayList<FileInfo> scanFiles(String filePath);
 
     public static native long getFileLastModifiedTime(String filePath);
 

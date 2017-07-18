@@ -69,7 +69,7 @@ public class LocalFileCacheManager {
                 taskIng(localDirsArrayList.get(i).getFilePath(), (int) (100 / (float) (localDirsArrayList.size() / 100.00 * 100) * i));
             }
             String folder_id = ScannerUtil.getFolderId(localDirsArrayList.get(i).getFilePath());
-            List<FileInfo> filesArrayList = ScannerWrapper.scanFiles(localDirsArrayList.get(i).getFilePath(), FileScanner.getType());
+            List<FileInfo> filesArrayList = ScannerWrapper.scanFiles(localDirsArrayList.get(i).getFilePath());
             //循环文件列表,文件插入到文件列表中
             mDBFilesHelper.insertNewFiles(filesArrayList, folder_id,mCommonListener);
             localDirsArrayList.get(i).setCount(filesArrayList.size());
@@ -169,7 +169,7 @@ public class LocalFileCacheManager {
         for (int i = 0; i < updateDirsList.size(); i++) {
             fileInfo = updateDirsList.get(i);
             taskIng(fileInfo.getFilePath(), (int) (100 / (float) (updateDirsList.size() / 100.00 * 100) * i));
-            List<FileInfo> newFilesList = ScannerWrapper.scanFiles(fileInfo.getFilePath(), FileScanner.getType());
+            List<FileInfo> newFilesList = ScannerWrapper.scanFiles(fileInfo.getFilePath());
             //如果扫描目录下没有文件,数据库里的此目录的数量大于0，需要删除数据库里的文件
             if (newFilesList == null || newFilesList.size() == 0) {
                 fileInfo.setCount(0);

@@ -20,7 +20,7 @@ JNIEXPORT jobject JNICALL Java_io_haydar_filescanner_FileScannerJni_scanDirs
  * Signature: (Ljava/lang/String;)Ljava/util/ArrayList;
  */
 JNIEXPORT jobject JNICALL Java_io_haydar_filescanner_FileScannerJni_scanFiles
-        (JNIEnv *, jobject, jstring,jstring);
+        (JNIEnv *, jobject, jstring);
 
 
 /*
@@ -45,7 +45,7 @@ JNIEXPORT jlong JNICALL Java_io_haydar_filescanner_FileScannerJni_getFileLastMod
 
 
 void doScannerDirs(JNIEnv *env, char *path) ;
-void doScannerFiles(JNIEnv *env, char *path,char *type);
+void doScannerFiles(JNIEnv *env, char *path);
 void doScannerUpdateDirs(JNIEnv *env, char *path);
 void init(JNIEnv *pEnv) ;
 void finish(JNIEnv *env);

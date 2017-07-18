@@ -87,7 +87,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void fileScanner() {
         //FileScanner.getInstance(this).clear();
-        FileScanner.getInstance(this).setType(".mp3").start(new FileScanner.ScannerListener() {
+        FileScanner.getInstance(this).start(new FileScanner.ScannerListener() {
             @Override
             public void onScanBegin() {
                 Log.d(TAG, "onScanBegin: ");

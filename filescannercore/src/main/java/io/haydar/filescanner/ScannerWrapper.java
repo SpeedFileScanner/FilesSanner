@@ -30,13 +30,13 @@ public class ScannerWrapper {
         return result;
     }
 
-    public static List<FileInfo> scanFiles(String filePath, String type) {
+    public static List<FileInfo> scanFiles(String filePath) {
         List<FileInfo> result = new ArrayList<>();
         if (FilterUtil.isInBlackList(filePath)) {
             return result;
         }
         if (FileScannerJni.isLoadJNISuccess()) {
-            result = FileScannerJni.scanFiles(filePath, type);
+            result = FileScannerJni.scanFiles(filePath);
         } else {
             result = FileScannerJava.scanFiles(filePath);
         }

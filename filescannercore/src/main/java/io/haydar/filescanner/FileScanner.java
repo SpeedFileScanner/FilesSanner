@@ -1,7 +1,6 @@
 package io.haydar.filescanner;
 
 import android.content.Context;
-import android.text.TextUtils;
 
 import java.util.ArrayList;
 
@@ -17,7 +16,6 @@ public class FileScanner {
     public static final String TAG = "FileScanner";
     private Context mContext;
     private static FileScanner instance;
-    private static String type;
     public static final int SCANNER_TYPE_ADD=1;
     public static final int SCANNER_TYPE_DEL=2;
 
@@ -33,23 +31,10 @@ public class FileScanner {
 
     }
 
-    public FileScanner setType(String s) {
-        type = s;
-        return instance;
-    }
-
-    public static String getType() {
-        return type;
-    }
-
     /**
      * 开始扫描
      */
     public void start(ScannerListener mCommonListener) {
-        if (TextUtils.isEmpty(type)) {
-            LogUtil.i(TAG, "start: 需要查找的类型为空");
-            return;
-        }
         LogUtil.i(TAG, "start: -----start scan-----");
         setCommonListener(mCommonListener);
         //判断是否全盘扫描
