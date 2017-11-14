@@ -172,7 +172,7 @@ public class LocalFileCacheManager {
             List<FileInfo> newFilesList = ScannerWrapper.scanFiles(fileInfo.getFilePath());
             //如果扫描目录下没有文件,数据库里的此目录的数量大于0，需要删除数据库里的文件
             if (newFilesList == null || newFilesList.size() == 0) {
-                fileInfo.setCount(0);
+                //fileInfo.setCount(0);
                 if (fileInfo.getCount() > 0) {
                     mDBFilesHelper.deleteFilesByFolderId(ScannerUtil.getFolderId(fileInfo.getFilePath()), mCommonListener);
                 }
